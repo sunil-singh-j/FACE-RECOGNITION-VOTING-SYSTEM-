@@ -8,8 +8,8 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json());
+// mongoose.connect('your db url')
 
-mongoose.connect('mongodb+srv://deshrajjatt22:vFO5PUXLddhpgL44@cluster0.ogrvrsr.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 db.once('open', () => {
