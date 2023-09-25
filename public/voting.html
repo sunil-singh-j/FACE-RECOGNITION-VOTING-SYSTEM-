@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting System</title>
+    <link rel="stylesheet" href="voting.css">
+    <!-- <script src="../public/js/votingscript.js"></script> -->
+</head>
+<body>
+    <h1>Vote for Your Favorite Option</h1>
+    <div>
+       
+        <ul>
+            <li><button id="partyA">Party 1</button></li>
+            <li><button id="partyB">party 2</button></li>
+            <li><button id="partyC">party 3</button></li>
+        </ul>
+        
+           
+       
+    </div>
+   <!-- ... Your HTML content ... -->
+
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <p id="popup-message">Vote successful for Party <span id="popup-party"></span>!</p>
+        <button id="popup-ok">OK</button>
+    </div>
+</div>
+
+</body>
+<!-- ... Your HTML content ... -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get the value of 'userName' query parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userName = urlParams.get('userName');
+        const uniqueId=userName;
+
+        // Check if 'userName' exists in the URL
+        if (userName) {
+            // 'userName' exists, you can proceed with the voting logic here
+            const partyAButton = document.getElementById('partyA');
+            const partyBButton = document.getElementById('partyB');
+            const partyCButton = document.getElementById('partyC');
+            const popup = document.getElementById('popup');
+            const popupMessage = document.getElementById('popup-message');
+            const popupParty = document.getElementById('popup-party');
+            const popupOKButton = document.getElementById('popup-ok');
+            const isVoted=true
+            async function updateVoteCount(party) {
+                try {
+                    // Send a POST request to the backend to update the vote count
+                    const response = await fetch(`/vote/${party}`, {
+                        method: 'POST', // Use POST method to indicate a vote
+                    });
+                    console.log(`/voter/${userName}/isVoted`,);
+
+                    if (response.ok) {
+                        // Vote was successful, update 'isVoted' variable on the backend
+                        const updateResponse = await fetch(`/voter/${uniqueId}/isVoted`, {
+                            // console.log(`/voter/${userName}/isVoted`);
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ isVoted: true }), // Set 'isVoted' to true
+                        });
+
+                        if (updateResponse.ok) {
+                            const updatedCounts = await response.json();
+                            // Update vote counts here
+                            document.querySelector('ul').style.display = 'none';
+                            popupParty.textContent = party; // Set the party name in the popup
+                            popup.style.display = 'block'; // Show the popup
+                        } else {
+                            console.error('Error updating isVoted:', updateResponse.statusText);
+                        }
+                    } else {
+                        console.error('Error updating vote count:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            partyAButton.addEventListener('click', () => {
+                updateVoteCount('partyA');
+            });
+
+            partyBButton.addEventListener('click', () => {
+                updateVoteCount('partyB');
+            });
+
+            partyCButton.addEventListener('click', () => {
+                updateVoteCount('partyC');
+            });
+
+            popupOKButton.addEventListener('click', () => {
+                popup.style.display = 'none'; // Hide the popup
+                // Redirect back to index.html
+                window.location.href = 'index.html';
+            });
+        } else {
+            // 'userName' is not found in the URL, redirect to index.html
+            window.location.href = 'index.html';
+        }
+    });
+</script>
+
+<!-- ... Rest of your HTML content ... -->
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="Admin.css">
+</head>
+<body>
+    <h1>Face Recognition Voting System</h1>
+    <h1>Voter Management</h1>
+
+    
+    <!-- Button to show all users -->
+    <button id="showAllUsers">Show All Users</button>
+
+    
+
+    <!-- Table to display users -->
+    <table id="table">
+        <thead>
+            <tr>
+                <th>Unique ID</th>
+                <th>Name</th>
+                <th>Is Voted</th>
+            </tr>
+        </thead>
+        <tbody id="userList"></tbody>
+    </table>
+
+     <!-- Form to delete a user by uniqueId -->
+     <form id="deleteUserForm">
+        <label for="deleteUniqueId">Delete User by Unique ID:</label>
+        <input type="text" id="deleteUniqueId" required>
+        <button type="submit">Delete User</button>
+    </form>
+    <a href="signup.html"><button>Add Voter</button></a>
+    <a href="results.html"><button>Results</button></a>
+
+    <script>
+        const table=document.getElementById('table')
+        const deleteUserForm = document.getElementById('deleteUserForm');
+        const deleteUniqueIdInput = document.getElementById('deleteUniqueId');
+        const showAllUsersButton = document.getElementById('showAllUsers');
+        
+        const userListTbody = document.getElementById('userList');
+
+        // Function to fetch and display all users
+        async function showAllUsers() {
+            try {
+                const response = await fetch('/users');
+                const users = await response.json();
+                table.style.display="block"
+                userListTbody.innerHTML = ''; // Clear the existing table
+
+                if (users.length === 0) {
+                    userListTbody.innerHTML = '<tr><td colspan="3">No users found.</td></tr>';
+                } else {
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.uniqueId}</td>
+                            <td>${user.name}</td>
+                            <td>${user.isVoted}</td>
+                        `;
+                        userListTbody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        // Event listener for deleting a user
+        deleteUserForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const uniqueId = deleteUniqueIdInput.value;
+
+            try {
+                const response = await fetch(`/users/${uniqueId}`, { method: 'DELETE' });
+
+                if (response.status === 200) {
+                    alert('User deleted successfully.');
+                    showAllUsers();
+                } else {
+                    alert('User deletion failed. Please check the unique ID.');
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('An error occurred while deleting the user. Please try again later.');
+            }
+        });
+
+        // Event listener for showing all users
+        showAllUsersButton.addEventListener('click', showAllUsers);
+
+        
+    </script>
+</body>
+</html>

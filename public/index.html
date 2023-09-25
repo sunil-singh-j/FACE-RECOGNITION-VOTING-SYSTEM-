@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+           
+        
+            align-items: center;
+            flex-direction: column;
+            background-color: rgb(102, 155, 155);
+        }
+        canvas{
+            position: absolute ;
+        }
+        h1{
+            padding-bottom: 50px;
+        }
+        button{
+            cursor: pointer;
+            margin-bottom: 10px;
+            box-shadow: #333;
+        }
+        input {
+            font-size: x-large;
+        }
+        label{
+            font-size: x-large;
+        }
+        button{
+            font-size: x-large;
+        }
+        .spinner {
+    margin: 100px auto;
+    width: 50px;
+    height: 50px;
+    position: relative;
+    transform: rotateZ(45deg);
+}
+
+.cube1, .cube2 {
+    background-color: #333333;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: cubeAnimation 1.8s infinite ease-in-out;
+}
+
+.cube2 {
+    animation-delay: -0.9s;
+}
+
+@keyframes cubeAnimation {
+    25%, 75% { transform: translateX(50px) rotateZ(45deg); }
+    50% { transform: translateX(50px) translateY(50px) rotateZ(45deg); }
+    0%, 100% { transform: rotateZ(45deg); }
+}
+
+#loadingAnimation p {
+    font-size: large;
+    margin-top: 10px;
+}
+.none{
+    display: none;
+}
+
+
+    </style>
+</head>
+<body>
+    <h1>Face Authentication Login</h1>
+     
+    <a href="manage.html"><button>manage</button></a>
+    <form id="nameForm">
+        <label for="userName">Enter Your ID: </label>
+        <input type="text" id="userName" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="loadingAnimation" style="display: none;">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+        <p>Please wait... It may take few seconds...</p>
+    </div>
+    
+    <br>
+    <div id="authMessage" style="display: none;"></div>
+    
+    <video style="display: none;" id="videoInput" width="620p" height="450" controls muted ></video>
+    
+    <script src="./js/face-api.min.js"></script>
+    <script src="./js/animation.js"></script>
+    <script defer async src="./js/scriptm.js"></script>
+    
+   
+</body>  
+</html>

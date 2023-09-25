@@ -1,0 +1,25 @@
+body{
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+   
+
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(102, 155, 155);
+}
+p{
+    background-color: rgb(73, 160, 56);
+    padding: 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+button{
+    background-color: rgb(152, 68, 231);
+    font-size: x-large;
+    margin-top: 10px;
+    cursor: pointer;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Registration</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <h1>Face Recognition Voting System</h1>
+    <h1>Voter Registration</h1>
+    <form id="registrationForm" enctype="multipart/form-data">
+        <label for="uniqueId">Unique ID:</label>
+        <input type="text" id="uniqueId" name="uniqueId" required><br><br>
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="photos">Photos (up to 5):</label>
+        <input type="file" id="photos" name="photos" accept="image/jpeg" multiple><br><br>
+        <!-- ^ Updated "accept" attribute to accept only JPEG images -->
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const registrationForm = document.getElementById('registrationForm');
+
+        registrationForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const uniqueId = document.getElementById('uniqueId').value;
+            const name = document.getElementById('name').value;
+            const photos = document.getElementById('photos').files;
+
+            // Check if any of the uploaded files are not in JPEG format
+            for (let i = 0; i < photos.length; i++) {
+                const file = photos[i];
+                if (file.type !== 'image/jpeg') {
+                    alert('Please upload only JPEG images.');
+                    return; // Prevent form submission if incorrect format is detected
+                }
+            }
+
+            const formData = new FormData();
+            formData.append('uniqueId', uniqueId);
+            formData.append('name', name);
+
+            for (let i = 0; i < photos.length; i++) {
+                formData.append('photos', photos[i]);
+            }
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.status === 201) {
+                    alert('Registration successful!');
+                    registrationForm.reset();
+                } else {
+                    alert('Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error registering voter:', error);
+                alert('An error occurred while registering. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>
